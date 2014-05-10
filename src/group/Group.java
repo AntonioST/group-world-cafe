@@ -8,7 +8,6 @@ import cclo.util.args.*;
 import java.util.*;
 
 /**
- * verion 1.3
  *
  * @author antonio
  */
@@ -99,16 +98,7 @@ public class Group{
     }
 
     void execute(){
-        if (task == null) return;
         task.answer = null;
-        try{
-            System.out.println("check task arguement...");
-            task.checkInit();
-            System.out.println(task.toString());
-        } catch (IllegalStateException e){
-            System.out.println("failure");
-            return;
-        }
         try{
             System.out.println("start working...");
             fill();
@@ -144,7 +134,7 @@ public class Group{
         int[] gc = new int[task.group];
         while (task.answer == null) {
             if (place == task.count) {
-                if (checkLess(gc)) {
+                if (checkLess(task.less, gc)) {
                     if (set.add(curt)) {
                         if (level == task.round - 1) {
                             task.answer = curt;
@@ -182,20 +172,16 @@ public class Group{
         return task.answer != null;
     }
 
-    private boolean checkLess(int[] gc){
-        for (int i = 0; i < task.group; i++) {
-            if (gc[i] < task.less) {
-                return false;
-            }
+    private static boolean checkLess(int less, int[] gc){
+        for (int i = 0, sz = gc.length; i < sz; i++) {
+            if (gc[i] < less) return false;
         }
         return true;
     }
 
     private static boolean checkMeetForAll(Node node, int meet, int place){
         for (int i = 0; i < place; i++) {
-            if (!checkMeet(node, meet, i, place)) {
-                return false;
-            }
+            if (!checkMeet(node, meet, i, place)) return false;
         }
         return true;
     }
